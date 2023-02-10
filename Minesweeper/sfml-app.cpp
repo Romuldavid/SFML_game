@@ -1,5 +1,6 @@
 //2:08 draw field
 //4:40 random mines
+//6:43 prepare field with mines
 
 #include <SFML/Graphics.hpp>
 #include <time.h>
@@ -61,11 +62,23 @@ int main()
 
     while(window.isOpen())
     {
+        Vector2i pos = Mouse::getPosition(window);
+        int x = pos.x / w;
+        int y = pos.y / w;
+        
+        
         Event event;
         while(window.pollEvent(event))
         {
             if(event.type == Event::Closed)
                 window.close();
+
+            if(event.type == Event::MouseButtonPressed)
+                if(event.key.code == Mouse::Left)
+                    sgrid[x][y] = grid[x][y];
+
+            if(event.key.code == Mouse::Right)
+                    sgrid[x][y] = 11;
         }
 
         window.clear(Color::White);
@@ -73,7 +86,8 @@ int main()
         for(int i = 1; i <= 10; i++)
             for(int j = 1; j <= 10; j++)
             {
-                sgrid[i][j] = grid[i][j];
+                if(sgrid[x][y] == 9)
+                    sgrid[i][j] = grid[i][j];
                 tiles.setTextureRect(IntRect(sgrid[i][j] * w,  0, w, w));
                 tiles.setPosition(i * w, j * w);
 
